@@ -15,7 +15,7 @@ use App\Http\Controllers\API\AuthController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+Route::get('/users/{id?}', [UserController::class, 'getUsers'])->name('api:getUsers');
 Route::get('/highlighted', [UserController::class, 'highlighted'])->name('api:highlighted');
 Route::post('/login', [AuthController::class, 'login'])->name('api:login');
 

@@ -7,6 +7,7 @@ use DB;
 
 use App\Models\UserType;
 use App\Models\User;
+use App\Models\UserHobby;
 
 class DatabaseSeeder extends Seeder
 {
@@ -65,5 +66,46 @@ class DatabaseSeeder extends Seeder
 			"is_highlighted" => 1,
 	   ]);
 	   
+	   UserHobby::insert([
+			"user_id" => "1",
+			"name" => "Running",
+			"created_at" => date("Y-m-d"),
+			"updated_at" => date("Y-m-d")
+	   ]);
+	   
+	   UserHobby::insert([
+			"user_id" => "1",
+			"name" => "Swimming",
+			"created_at" => date("Y-m-d"),
+			"updated_at" => date("Y-m-d")
+	   ]);
+	   
+	   UserHobby::insert([
+			"user_id" => "1",
+			"name" => "football",
+			"created_at" => date("Y-m-d"),
+			"updated_at" => date("Y-m-d")
+	   ]);
+
+	   UserHobby::insert([
+			"user_id" => "2",
+			"name" => "Reading",
+			"created_at" => date("Y-m-d"),
+			"updated_at" => date("Y-m-d")
+	   ]);
+
+	   UserHobby::insert([
+			"user_id" => "2",
+			"name" => "Dancing",
+			"created_at" => date("Y-m-d"),
+			"updated_at" => date("Y-m-d")
+	   ]);
+	   
+	   UserHobby::insert([
+			"user_id" => "2",
+			"name" => "football",
+			"created_at" => date("Y-m-d"),
+			"updated_at" => date("Y-m-d")
+	   ]);
     }
 }
