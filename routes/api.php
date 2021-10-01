@@ -15,12 +15,25 @@ use App\Http\Controllers\API\AuthController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+<<<<<<< HEAD
 Route::get('/users/{id?}', [UserController::class, 'getUsers'])->name('api:getUsers');
+=======
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth'
+], function () {
+	Route::post('register', [AuthController::class, 'register'])->name('api:register');
+    Route::post('login', [AuthController::class, 'login'])->name('api:login');
+    Route::any('logout', [AuthController::class, 'logout'])->name('api:logout');
+    Route::post('refresh', [AuthController::class, 'refresh'])->name('api:refresh');
+});
+
+
+>>>>>>> 915f2246783e60e545fc945edab5d4ef761dbff1
 Route::get('/highlighted', [UserController::class, 'highlighted'])->name('api:highlighted');
-Route::post('/login', [AuthController::class, 'login'])->name('api:login');
 
 Route::group(['middleware' => 'auth.jwt'], function () {
 	Route::get('/search/{keyword}', [UserController::class, 'search'])->name('api:search');
 	Route::get('/test', [UserController::class, 'test'])->name('api:test');
-	Route::post('logout', [AuthController::class, 'logout'])->name('api:logout');
 });
