@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 use App\Models\User;
 use App\Models\UserConnection;
@@ -12,7 +13,7 @@ use App\Models\UserNotification;
 use App\Models\UserHobby;
 
 use Auth;
-use Carbon\Carbon;
+use JWTAuth;
 
 class UserController extends Controller{
 	
@@ -22,7 +23,7 @@ class UserController extends Controller{
 	}
 
 	public function getUsers(){
-		$user = Auth::user();
+		$user = JWTAuth::user();
 		$id = $user->id;
 		$user_data = User::select('*')
 						 ->where('id', $id)   
@@ -56,7 +57,7 @@ class UserController extends Controller{
             ), 400);
         }
 		
-		$user = Auth::user();
+		$user = JWTAuth::user();
 		$id = $user->id;
 		$user::where('id', $id)
 		 	 ->update([
@@ -77,7 +78,7 @@ class UserController extends Controller{
 
 	// returns all user hobbies
 	public function getUserHobbies() {
-		$user = Auth::user();
+		$user = JWTAuth::user();
 		$id = $user->id;
 
 		$user_data = UserHobby::select('name')
@@ -102,16 +103,9 @@ class UserController extends Controller{
 		return json_encode($hobbies);
 	}
 
-	
-	public function test(){
-		$user = Auth::user();
-		$id = $user->id;
-		return json_encode(Auth::user());
-	}
-
 	public function addToFavorites(Request $request)
     {
-		$user_id =Auth::user()->id;
+		$user_id =JWTAuth::user()->id;
 		$reciever_id = $request->reciever_id;
 
 		UserFavorite::insert([
@@ -172,11 +166,11 @@ class UserController extends Controller{
 
 	public function sendMsg(Request $request)
 	{
-		$user_id = Auth::user()->id;
+		$user_id = JWTAuth::user()->id;
 		$reciever_id = $request->receiver_id;
 		$msg_body = $request->msg_body;
 
-		// $is_match = UserConnections::where()
+		// $is_match = UserConnections::where(
 	}
 }
 
