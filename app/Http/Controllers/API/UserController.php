@@ -138,12 +138,18 @@ class UserController extends Controller{
 	function search($keyword = null){
 		$user = JWTAuth::user();
 		$id = $user->id;
-		$search = User::where('id','!=',$id)->where('first_name','like',$keyword.'%')->orwhere('last_name','like',$keyword.'%')->limit(6)->get()->toArray();
+		$search = User::where('id','!=',$id)
+					  ->where('first_name','like',$keyword.'%')
+					  ->orwhere('last_name','like',$keyword.'%')
+					  ->limit(6)
+					  ->get()
+					  ->toArray();
 	
 		return json_encode($search);
 	}
 
 	//save image to storage/app/public/uploads
+	// run php artisan storage:link when testing
 	public function uploadImage(Request $request){
 		$user = Auth::user();
 		$id = $user->id;
@@ -192,7 +198,10 @@ class UserController extends Controller{
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
 		]);
 
-		$is_match =  UserFavorite::where('from_user_id', $receiver_id)->where('to_user_id', $user_id)->get()->count();
+		$is_match =  UserFavorite::where('from_user_id', $receiver_id)
+							     ->where('to_user_id', $user_id)
+								 ->get()
+								 ->count();
 
 		$user1 = User::find($user_id);
 		$user1_fullname = $user1->first_name.' '.$user1->last_name;
