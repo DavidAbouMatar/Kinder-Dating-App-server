@@ -26,6 +26,7 @@ Route::group([
     Route::post('login', [AuthController::class, 'login'])->name('api:login');
     Route::any('logout', [AuthController::class, 'logout'])->name('api:logout');
     Route::post('refresh', [AuthController::class, 'refresh'])->name('api:refresh');
+    Route::post('favorite/{id?}', [UserController::class, 'addToFavorites'])->name('api:favorite');
 });
 
 Route::group(['middleware' => 'auth.jwt'], function () {
