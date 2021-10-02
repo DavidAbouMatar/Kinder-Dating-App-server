@@ -4,9 +4,15 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
+
 use App\Models\User;
+use App\Models\UserConnection;
+use App\Models\UserFavorite;
+use App\Models\UserNotification;
 use App\Models\UserHobby;
+
 use Auth;
+use Carbon\Carbon;
 
 class UserController extends Controller{
 	
@@ -103,6 +109,75 @@ class UserController extends Controller{
 		return json_encode(Auth::user());
 	}
 
+	public function addToFavorites(Request $request)
+    {
+		$user_id =Auth::user()->id;
+		$reciever_id = $request->reciever_id;
+
+		UserFavorite::insert([
+			'from_user_id' => $user_id,
+			'to_user_id' => $reciever_id,
+			'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+		]);
+
+		$is_match =  UserFavorite::where('from_user_id', $reciever_id)->where('to_user_id', $user_id)->get()->count();
+
+		$user1 = User::find($user_id);
+		$user1_fullname = $user1->first_name.' '.$user1->last_name;
+
+		if ($is_match) {
+			$user2 = User::find($reciever_id);
+			$user2_fullname = $user2->first_name.' '.$user2->last_name;
+
+			UserConnection::insert([
+				'user1_id' => $user_id,
+				'user2_id' => $reciever_id,
+				'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+				'updated_at' => Carbon::now()->format('Y-m-d H:i:s')	
+			]);
+
+			UserNotification::insert([
+				'user_id' => $user_id,
+				'body' => "You are a Match with $user2_fullname!",
+				'is_read' => 0,
+				'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+				'updated_at' => Carbon::now()->format('Y-m-d H:i:s')	
+			]);
+
+			UserNotification::insert([
+				'user_id' => $reciever_id,
+				'body' => "You are a Match with $user1_fullname!",
+				'is_read' => 0,
+				'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+				'updated_at' => Carbon::now()->format('Y-m-d H:i:s')	
+			]);
+
+		}else {
+			UserNotification::insert([
+				'user_id' => $reciever_id,
+				'body' => "Hey! $user1_fullname tapped you!",
+				'is_read' => 0,
+				'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+				'updated_at' => Carbon::now()->format('Y-m-d H:i:s')	
+			]);
+		}
+
+		// return response()->json($is_match, 201);
+        return response()->json([
+            'status' => true,
+            'message' => 'User added to Favorites!',
+        ], 201);
+    }
+
+	public function sendMsg(Request $request)
+	{
+		$user_id = Auth::user()->id;
+		$reciever_id = $request->receiver_id;
+		$msg_body = $request->msg_body;
+
+		// $is_match = UserConnections::where()
+	}
 }
 
 ?>
