@@ -16,12 +16,14 @@ use App\Http\Controllers\API\AuthController;
 |
 */
 Route::get('/highlighted', [UserController::class, 'highlighted'])->name('api:highlighted');
-Route::get('/users/{id?}', [UserController::class, 'getUsers'])->name('api:getUsers');
+
 
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
 ], function () {
+    Route::get('users/{id?}', [UserController::class, 'getUsers'])->name('api:getUsers');
+    Route::post('edit_profile', [UserController::class, 'edit_profile'])->name('api:edit_profile');
 	Route::post('register', [AuthController::class, 'register'])->name('api:register');
     Route::post('login', [AuthController::class, 'login'])->name('api:login');
     Route::any('logout', [AuthController::class, 'logout'])->name('api:logout');

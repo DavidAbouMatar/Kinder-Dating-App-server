@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
 			"first_name" => "Nabih",
 			"last_name" => "Tannous",
 			"email" => "nabih@gmail.com",
-			"password" => hash("sha256", "test123"),
+			"password" => bcrypt("test123"),
 			"gender" => 0,
 			"interested_in" => 1,
 			"dob" => "1981-02-12",
