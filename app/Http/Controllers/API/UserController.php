@@ -10,11 +10,13 @@ use Auth;
 
 class UserController extends Controller{
 	
+	// get only highlighted users to home page (no authintication needed)
 	public function highlighted(){
 		$highlighted_users = User::where("is_highlighted", 1)->limit(6)->get()->toArray();
 		return json_encode($highlighted_users);
 	}
 
+	// get all users with preferred gender to user 
 	public function getUsers(){
 		$user = Auth::user();
 		$id = $user->id;
@@ -30,6 +32,7 @@ class UserController extends Controller{
 		return json_encode($users);
 	}
 
+	// edit profile. profile picture not included yet
 	public function edit_profile(Request $request) {
 
 		$validator = Validator::make($request->all(), [
@@ -94,6 +97,21 @@ class UserController extends Controller{
 		}
 
 		return json_encode($hobbies);
+	}
+
+	// add hobbies to table user_hobbies IN PROCCESS
+	public function addHobbies(Request $request) {
+		$user = Auth::user();
+		$id = $user->id;
+
+		// $Hobby = new UserHobby;
+
+        // $Hobby->user_id = $id;
+        // $Hobby->name = $request->name;
+        // $Hobby->save();
+
+		// return $Hobby;
+		dd($request);
 	}
 
 	
