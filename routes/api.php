@@ -31,4 +31,5 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::post('admin/approve_images', [AdminController::class, 'approveImages'])->name('api:approve_images');
     Route::post('add_to_favorites', [UserController::class, 'addToFavorites'])->name('api:add_to_favorites');
     Route::post('send_msg', [UserController::class, 'sendMsg'])->name('api:send_msg');
+    Route::get('get_msgs', [UserController::class, 'getMsgs'])->name('api:get_msgs');
 });

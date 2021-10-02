@@ -257,10 +257,10 @@ class UserController extends Controller{
 		$msg_body = $request->msg_body;
 
 		$is_match = UserConnection::where('user1_id', $user_id)
-									->where('user2_id', $receiver_id)
-									->orwhere('user1_id', $receiver_id)
-									->where('user2_id', $user_id)
-									->get()->count();
+								  ->where('user2_id', $receiver_id)
+								  ->orwhere('user1_id', $receiver_id)
+								  ->where('user2_id', $user_id)
+								  ->get()->count();
 
 		if ($is_match) {
 			UserMessage::insert([
@@ -278,6 +278,18 @@ class UserController extends Controller{
 			return response()->json("Can't send message. You are not a Match yet!");
 		}
 
+	}
+
+	// get user approved msgs
+	public function getMsgs()
+	{
+		$user_id = JWTAuth::user()->id;
+
+		$approved_msgs = UserMessage::where('receiver_id', $user_id)
+									->where('is_approved', 1)
+									->get();
+
+		return json_encode($approved_msgs);
 	}
 }
 
