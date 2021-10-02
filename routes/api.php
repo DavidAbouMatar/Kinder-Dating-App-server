@@ -22,7 +22,9 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
 ], function () {
-    Route::get('users/{id?}', [UserController::class, 'getUsers'])->name('api:getUsers');
+    Route::get('getUsers', [UserController::class, 'getUsers'])->name('api:getUsers');
+    Route::get('getHobbies', [UserController::class, 'getHobbies'])->name('api:getHobbies');
+    Route::get('getUserHobbies', [UserController::class, 'getUserHobbies'])->name('api:getUserHobbies');
     Route::post('edit_profile', [UserController::class, 'edit_profile'])->name('api:edit_profile');
 	Route::post('register', [AuthController::class, 'register'])->name('api:register');
     Route::post('login', [AuthController::class, 'login'])->name('api:login');

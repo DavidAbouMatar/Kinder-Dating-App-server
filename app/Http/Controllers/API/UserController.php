@@ -5,16 +5,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserHobby;
 use Auth;
 
 class UserController extends Controller{
 	
-	function highlighted(){
+	public function highlighted(){
 		$highlighted_users = User::where("is_highlighted", 1)->limit(6)->get()->toArray();
 		return json_encode($highlighted_users);
 	}
 
-	function getUsers($id){
+	public function getUsers(){
+		$user = Auth::user();
+		$id = $user->id;
 		$user_data = User::select('*')
 						 ->where('id', $id)   
 					     ->get();
@@ -27,7 +30,7 @@ class UserController extends Controller{
 		return json_encode($users);
 	}
 
-	function edit_profile(Request $request) {
+	public function edit_profile(Request $request) {
 
 		$validator = Validator::make($request->all(), [
             'first_name' => 'required|string|between:2,100',
@@ -66,8 +69,35 @@ class UserController extends Controller{
 		], 201);
 	}	
 
+	// returns all user hobbies
+	public function getUserHobbies() {
+		$user = Auth::user();
+		$id = $user->id;
+
+		$user_data = UserHobby::select('name')
+							  ->where('user_id', $id)   
+							  ->get();
+		
+		foreach ($user_data as $name => $hobby) {
+			$user_hobbies[] = $hobby->name;
+		}
+
+		return json_encode($user_hobbies);
+	}
+
+	// returns all hobbies in table user_hobbies
+	public function getHobbies() {
+		$user_data = UserHobby::select('name')->get();
+		
+		foreach ($user_data as $name => $hobby) {
+			$hobbies[] = $hobby->name;
+		}
+
+		return json_encode($hobbies);
+	}
+
 	
-	function test(){
+	public function test(){
 		$user = Auth::user();
 		$id = $user->id;
 		return json_encode(Auth::user());
