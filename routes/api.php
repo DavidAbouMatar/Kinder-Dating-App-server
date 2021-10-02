@@ -15,18 +15,10 @@ use App\Http\Controllers\API\AuthController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::get('/highlighted', [UserController::class, 'highlighted'])->name('api:highlighted');
+
 Route::post('register', [AuthController::class, 'register'])->name('api:register');
 Route::post('login', [AuthController::class, 'login'])->name('api:login');
-
-
-Route::group([
-    'middleware' => 'api',
-    'prefix' => 'auth'
-], function () {
-    Route::any('logout', [AuthController::class, 'logout'])->name('api:logout');
-    Route::post('refresh', [AuthController::class, 'refresh'])->name('api:refresh');
-});
+Route::get('/highlighted', [UserController::class, 'highlighted'])->name('api:highlighted');
 
 Route::group(['middleware' => 'auth.jwt'], function () {
 	Route::get('/search/{keyword}', [UserController::class, 'search'])->name('api:search');
@@ -36,4 +28,13 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('getUserHobbies', [UserController::class, 'getUserHobbies'])->name('api:getUserHobbies');
     Route::post('edit_profile', [UserController::class, 'edit_profile'])->name('api:edit_profile');
     Route::post('add_to_favorites', [UserController::class, 'addToFavorites'])->name('api:add_to_favorites');
+    Route::post('send_msg', [UserController::class, 'sendMsg'])->name('api:send_msg');
+});
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth'
+], function () {
+    Route::any('logout', [AuthController::class, 'logout'])->name('api:logout');
+    Route::post('refresh', [AuthController::class, 'refresh'])->name('api:refresh');
 });
