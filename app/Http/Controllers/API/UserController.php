@@ -11,6 +11,7 @@ use App\Models\UserConnection;
 use App\Models\UserFavorite;
 use App\Models\UserNotification;
 use App\Models\UserHobby;
+use App\Models\UserMessage;
 
 use Auth;
 use JWTAuth;
@@ -130,30 +131,31 @@ class UserController extends Controller{
         ], 201);
 	}
 
+	// add user to favorites, and decide whether there is a match or not
 	public function addToFavorites(Request $request)
     {
 		$user_id =JWTAuth::user()->id;
-		$reciever_id = $request->reciever_id;
+		$receiver_id = $request->receiver_id;
 
 		UserFavorite::insert([
 			'from_user_id' => $user_id,
-			'to_user_id' => $reciever_id,
+			'to_user_id' => $receiver_id,
 			'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
 		]);
 
-		$is_match =  UserFavorite::where('from_user_id', $reciever_id)->where('to_user_id', $user_id)->get()->count();
+		$is_match =  UserFavorite::where('from_user_id', $receiver_id)->where('to_user_id', $user_id)->get()->count();
 
 		$user1 = User::find($user_id);
 		$user1_fullname = $user1->first_name.' '.$user1->last_name;
 
 		if ($is_match) {
-			$user2 = User::find($reciever_id);
+			$user2 = User::find($receiver_id);
 			$user2_fullname = $user2->first_name.' '.$user2->last_name;
 
 			UserConnection::insert([
 				'user1_id' => $user_id,
-				'user2_id' => $reciever_id,
+				'user2_id' => $receiver_id,
 				'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
 				'updated_at' => Carbon::now()->format('Y-m-d H:i:s')	
 			]);
@@ -167,7 +169,7 @@ class UserController extends Controller{
 			]);
 
 			UserNotification::insert([
-				'user_id' => $reciever_id,
+				'user_id' => $receiver_id,
 				'body' => "You are a Match with $user1_fullname!",
 				'is_read' => 0,
 				'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
@@ -176,7 +178,7 @@ class UserController extends Controller{
 
 		}else {
 			UserNotification::insert([
-				'user_id' => $reciever_id,
+				'user_id' => $receiver_id,
 				'body' => "Hey! $user1_fullname tapped you!",
 				'is_read' => 0,
 				'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
@@ -190,14 +192,35 @@ class UserController extends Controller{
             'message' => 'User added to Favorites!',
         ], 201);
     }
-
+	
+	// send msg to a match
 	public function sendMsg(Request $request)
 	{
 		$user_id = JWTAuth::user()->id;
-		$reciever_id = $request->receiver_id;
+		$receiver_id = $request->receiver_id;
 		$msg_body = $request->msg_body;
 
-		// $is_match = UserConnections::where(
+		$is_match = UserConnection::where('user1_id', $user_id)
+									->where('user2_id', $receiver_id)
+									->orwhere('user1_id', $receiver_id)
+									->where('user2_id', $user_id)
+									->get()->count();
+
+		if ($is_match) {
+			UserMessage::insert([
+				'sender_id' => $user_id,
+				'receiver_id' => $receiver_id,
+				'body' => $msg_body,
+				'is_approved' => 0,
+				'is_read' => 0,
+				'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+				'updated_at' => Carbon::now()->format('Y-m-d H:i:s')	
+			]);
+		}else {
+			return response()->json("Can't send message. You are not a Match yet!");
+		}
+
+		return response()->json("Message sent successfully!");
 	}
 }
 
