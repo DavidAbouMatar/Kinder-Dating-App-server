@@ -16,6 +16,13 @@ use Carbon\Carbon;
 
 class UserController extends Controller{
 	
+	// testing function. temp.
+	public function test() {
+		$user = Auth::user();
+		$id = $user->id;
+		return json_encode(Auth::user());
+	}
+
 	// get only highlighted users to home page (no authintication needed)
 	public function highlighted(){
 		$highlighted_users = User::where("is_highlighted", 1)->limit(6)->get()->toArray();
@@ -101,30 +108,25 @@ class UserController extends Controller{
 		foreach ($user_data as $name => $hobby) {
 			$hobbies[] = $hobby->name;
 		}
-
 		return json_encode($hobbies);
 	}
 
-	// add hobbies to table user_hobbies IN PROCCESS
+	// add hobbies to table user_hobbies
 	public function addHobbies(Request $request) {
 		$user = Auth::user();
 		$id = $user->id;
 
-		// $Hobby = new UserHobby;
+		foreach ($request->all() as $name => $hobby) {
+			$Hobby = new UserHobby;
+			$Hobby->user_id = $id;
+			$Hobby->name = $hobby;
+			$Hobby->save();
+		}
 
-        // $Hobby->user_id = $id;
-        // $Hobby->name = $request->name;
-        // $Hobby->save();
-
-		// return $Hobby;
-		dd($request);
-	}
-
-	
-	public function test(){
-		$user = Auth::user();
-		$id = $user->id;
-		return json_encode(Auth::user());
+		return response()->json([
+            'status' => true,
+            'message' => 'Hobbies added successfully.',
+        ], 201);
 	}
 
 	public function addToFavorites(Request $request)
