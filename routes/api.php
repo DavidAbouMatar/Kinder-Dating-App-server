@@ -31,11 +31,3 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::post('add_hobbies', [UserController::class, 'addHobbies'])->name('api:addHobbies');
     Route::post('send_msg', [UserController::class, 'sendMsg'])->name('api:send_msg');
 });
-
-Route::group([
-    'middleware' => 'api',
-    'prefix' => 'auth'
-], function () {
-    Route::any('logout', [AuthController::class, 'logout'])->name('api:logout');
-    Route::post('refresh', [AuthController::class, 'refresh'])->name('api:refresh');
-});
