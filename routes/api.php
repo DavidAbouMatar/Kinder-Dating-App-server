@@ -32,4 +32,5 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::post('add_to_favorites', [UserController::class, 'addToFavorites'])->name('api:add_to_favorites');
     Route::post('send_msg', [UserController::class, 'sendMsg'])->name('api:send_msg');
     Route::get('get_msgs', [UserController::class, 'getMsgs'])->name('api:get_msgs');
+    Route::post('block_user', [UserController::class, 'blockUser'])->name('api:block_user');
 });

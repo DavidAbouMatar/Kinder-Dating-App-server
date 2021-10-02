@@ -13,6 +13,7 @@ use App\Models\UserNotification;
 use App\Models\UserHobby;
 use App\Models\UserPicture;
 use App\Models\UserMessage;
+use App\Models\UserBlocked;
 
 use Auth;
 use JWTAuth;
@@ -273,9 +274,15 @@ class UserController extends Controller{
 				'updated_at' => Carbon::now()->format('Y-m-d H:i:s')	
 			]);
 
-			return response()->json("Message sent successfully!");
+			return response()->json([
+				'status' => true,
+				'message' => 'Message sent successfully!',
+			], 201);
 		}else {
-			return response()->json("Can't send message. You are not a Match yet!");
+			return response()->json([
+				'status' => false,
+				'message' => "Can't send message. You are not a Match yet!",
+			], 400);
 		}
 
 	}
@@ -290,6 +297,37 @@ class UserController extends Controller{
 									->get();
 
 		return json_encode($approved_msgs);
+	}
+
+	// block a user
+	public function blockUser(Request $request)
+	{
+		$user_id = JWTAuth::user()->id;
+		$blocked_user_id = $request->blocked_user_id;
+
+		UserBlocked::insert([
+			'from_user_id' => $user_id,
+			'to_user_id' => $blocked_user_id,
+			'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+			'updated_at' => Carbon::now()->format('Y-m-d H:i:s')	
+		]);
+
+		UserFavorite::where('from_user_id', $user_id)
+					->where('to_user_id', $blocked_user_id)
+					->orwhere('from_user_id', $blocked_user_id)
+					->where('to_user_id', $user_id)
+					->delete();
+		
+		UserConnection::where('user1_id', $user_id)
+					  ->where('user2_id', $blocked_user_id)
+					  ->orwhere('user1_id', $blocked_user_id)
+					  ->where('user2_id', $user_id)
+					  ->delete();
+
+		return response()->json([
+            'status' => true,
+            'message' => 'User successfully blocked!',
+        ], 201);
 	}
 }
 
