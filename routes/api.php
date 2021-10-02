@@ -16,30 +16,19 @@ use App\Http\Controllers\API\AdminController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('register', [AuthController::class, 'register'])->name('api:register');
+Route::post('login', [AuthController::class, 'login'])->name('api:login');
+Route::get('/highlighted', [UserController::class, 'highlighted'])->name('api:highlighted');
 
-Route::group([
-    'middleware' => 'api',
-    'prefix' => 'auth'
-], function () {
+Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('getUsers', [UserController::class, 'getUsers'])->name('api:getUsers');
     Route::get('getHobbies', [UserController::class, 'getHobbies'])->name('api:getHobbies');
     Route::get('getUserHobbies', [UserController::class, 'getUserHobbies'])->name('api:getUserHobbies');
     Route::post('edit_profile', [UserController::class, 'edit_profile'])->name('api:edit_profile');
-	Route::post('register', [AuthController::class, 'register'])->name('api:register');
-    Route::post('login', [AuthController::class, 'login'])->name('api:login');
-    Route::any('logout', [AuthController::class, 'logout'])->name('api:logout');
-    Route::post('refresh', [AuthController::class, 'refresh'])->name('api:refresh');
-
-
     Route::get('/search/{keyword}', [UserController::class, 'search'])->name('api:search');
     Route::post('/upload_image', [UserController::class, 'uploadImage'])->name('api:upload_image');
     Route::get('admin/images', [AdminController::class, 'getNoneApprovedImages'])->name('api:get_images');
     Route::post('admin/approve_images', [AdminController::class, 'approveImages'])->name('api:approve_images');
-
-
-});
-
-Route::group(['middleware' => 'auth.jwt'], function () {
-	// Route::get('/search/{keyword}', [UserController::class, 'search'])->name('api:search');
-	Route::get('/test', [UserController::class, 'test'])->name('api:test');
+    Route::post('add_to_favorites', [UserController::class, 'addToFavorites'])->name('api:add_to_favorites');
+    Route::post('send_msg', [UserController::class, 'sendMsg'])->name('api:send_msg');
 });
