@@ -20,6 +20,8 @@ Route::post('register', [AuthController::class, 'register'])->name('api:register
 Route::post('login', [AuthController::class, 'login'])->name('api:login');
 Route::get('/highlighted', [UserController::class, 'highlighted'])->name('api:highlighted');
 Route::get('admin_get_msgs', [AdminController::class, 'getNoneApprovedMsgs'])->name('api:admin_get_msgs');
+Route::post('approve_msg', [AdminController::class, 'approveMsg'])->name('api:approve_msg');
+Route::post('reject_msg', [AdminController::class, 'rejectMsg'])->name('api:reject_msg');
 
 Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('getUsers', [UserController::class, 'getUsers'])->name('api:getUsers');

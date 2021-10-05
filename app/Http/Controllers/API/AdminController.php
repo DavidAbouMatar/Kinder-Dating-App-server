@@ -53,4 +53,30 @@ class AdminController extends Controller
 
     }
 
+    public function approveMsg(Request $request)
+    {
+        $approved_msg_id = $request->approved_msg_id;
+        $msg = UserMessage::find($approved_msg_id);
+        $msg->is_approved = 1;
+        $msg->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Message Approved!',
+        ], 200);
+    }
+
+    public function rejectMsg(Request $request)
+    {
+        $rejected_msg_id = $request->rejected_msg_id;
+        $msg = UserMessage::find($rejected_msg_id);
+        $msg->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Message Rejected!',
+        ], 200);
+    }
+
+
 }
