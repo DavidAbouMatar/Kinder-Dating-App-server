@@ -19,6 +19,7 @@ use App\Http\Controllers\API\AdminController;
 Route::post('register', [AuthController::class, 'register'])->name('api:register');
 Route::post('login', [AuthController::class, 'login'])->name('api:login');
 Route::get('/highlighted', [UserController::class, 'highlighted'])->name('api:highlighted');
+Route::get('admin_get_msgs', [AdminController::class, 'getNoneApprovedMsgs'])->name('api:admin_get_msgs');
 
 Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('getUsers', [UserController::class, 'getUsers'])->name('api:getUsers');

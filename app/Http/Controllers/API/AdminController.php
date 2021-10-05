@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 use App\Models\UserPicture;
+use App\Models\UserMessage;
 
 class AdminController extends Controller
 {
@@ -43,8 +44,13 @@ class AdminController extends Controller
                 'status' => true,
                 'message' => 'User profile successfully updated',
             ], 200);
-       
+    }
 
+    function getNoneApprovedMsgs(){
+        $images = UserMessage::where('is_approved','0')->get()->toArray();
+        
+        return json_encode($images);
 
     }
+
 }
