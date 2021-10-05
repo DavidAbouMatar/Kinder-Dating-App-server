@@ -25,6 +25,7 @@ Route::post('admin/reject_msg', [AdminController::class, 'rejectMsg'])->name('ap
 Route::get('admin/get_imgs', [AdminController::class, 'getNonApprovedImages'])->name('api:get_images');
 Route::post('admin/approve_img', [AdminController::class, 'approveImage'])->name('api:admin_approve_image');
 Route::post('admin/reject_img', [AdminController::class, 'rejectImage'])->name('api:admin_reject_image');
+Route::get('admin/pending_count', [AdminController::class, 'getPendingCount'])->name('api:admin_pending_count');
 
 Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('getUsers', [UserController::class, 'getUsers'])->name('api:getUsers');

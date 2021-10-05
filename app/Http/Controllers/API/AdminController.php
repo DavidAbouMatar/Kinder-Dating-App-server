@@ -74,5 +74,12 @@ class AdminController extends Controller
         ], 200);
     }
 
+    public function getPendingCount()
+    {
+        $pending_imgs_count = UserPicture::where('is_approved', 0)->get()->count();
+        $pending_msgs_count = UserMessage::where('is_approved', 0)->get()->count();
+        $pending_count = ["imgs_count"  =>  $pending_imgs_count, "msgs_count"  =>  $pending_msgs_count];
 
+        return json_encode($pending_count);
+    }
 }
