@@ -11,42 +11,38 @@ use App\Models\UserMessage;
 
 class AdminController extends Controller
 {
-    function getNoneApprovedImages(){
+    function getNonApprovedImages(){
         $images = UserPicture::where('is_approved','0')->get()->toArray();
         
         return json_encode($images);
 
     }
 
-    function approveImages(Request $request){
-        //request have row id,user_id, isapproved = 1
-        $validator = Validator::make($request->all(), [
-			'id' => 'required|integer',
-            'is_approved' => 'required|integer',
-        ]);
+    function approveImage(Request $request){
+        $approved_img_id = $request->approved_img_id;
+        $img = UserPicture::find($approved_img_id);
+        $img->is_approved = 1;
+        $img->save();
 
-        if ($validator->fails()) {
-            return response()->json(array(
-                "status" => false,
-                "errors" => $validator->errors()
-            ), 400);
-        }
-
-        $id = $request->id;
-
-        $images = new UserPicture();
-        $images::where('id', $id)
-		 	 ->update([
-				"is_approved" => $request -> is_approved,
-              ]);
-        
-              return response()->json([
-                'status' => true,
-                'message' => 'User profile successfully updated',
-            ], 200);
+        return response()->json([
+            'status' => true,
+            'message' => 'Image Approved!',
+        ], 200);
     }
 
-    function getNoneApprovedMsgs(){
+    function rejectImage(Request $request){
+        $rejected_img_id = $request->rejected_img_id;
+        $img = UserPicture::find($rejected_img_id);
+        $img->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Image Rejected!',
+        ], 200);
+    }
+
+
+    function getNonApprovedMsgs(){
         $images = UserMessage::where('is_approved','0')->get()->toArray();
         
         return json_encode($images);

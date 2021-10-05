@@ -19,9 +19,12 @@ use App\Http\Controllers\API\AdminController;
 Route::post('register', [AuthController::class, 'register'])->name('api:register');
 Route::post('login', [AuthController::class, 'login'])->name('api:login');
 Route::get('/highlighted', [UserController::class, 'highlighted'])->name('api:highlighted');
-Route::get('admin_get_msgs', [AdminController::class, 'getNoneApprovedMsgs'])->name('api:admin_get_msgs');
-Route::post('approve_msg', [AdminController::class, 'approveMsg'])->name('api:approve_msg');
-Route::post('reject_msg', [AdminController::class, 'rejectMsg'])->name('api:reject_msg');
+Route::get('admin/get_msgs', [AdminController::class, 'getNonApprovedMsgs'])->name('api:admin_get_msgs');
+Route::post('admin/approve_msg', [AdminController::class, 'approveMsg'])->name('api:admin_approve_msg');
+Route::post('admin/reject_msg', [AdminController::class, 'rejectMsg'])->name('api:admin_reject_msg');
+Route::get('admin/images', [AdminController::class, 'getNonApprovedImages'])->name('api:get_images');
+Route::post('admin/approve_image', [AdminController::class, 'approveImage'])->name('api:admin_approve_image');
+Route::post('admin/reject_image', [AdminController::class, 'rejectImage'])->name('api:admin_reject_image');
 
 Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('getUsers', [UserController::class, 'getUsers'])->name('api:getUsers');
@@ -30,8 +33,6 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::post('edit_profile', [UserController::class, 'edit_profile'])->name('api:edit_profile');
     Route::get('/search/{keyword}', [UserController::class, 'search'])->name('api:search');
     Route::post('/upload_image', [UserController::class, 'uploadImage'])->name('api:upload_image');
-    Route::get('admin/images', [AdminController::class, 'getNoneApprovedImages'])->name('api:get_images');
-    Route::post('admin/approve_images', [AdminController::class, 'approveImages'])->name('api:approve_images');
     Route::post('add_to_favorites', [UserController::class, 'addToFavorites'])->name('api:add_to_favorites');
     Route::post('send_msg', [UserController::class, 'sendMsg'])->name('api:send_msg');
     Route::get('get_msgs', [UserController::class, 'getMsgs'])->name('api:get_msgs');
