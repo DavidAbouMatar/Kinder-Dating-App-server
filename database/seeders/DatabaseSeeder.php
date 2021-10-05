@@ -29,6 +29,25 @@ class DatabaseSeeder extends Seeder
 			"created_at" => date("Y-m-d"),
 			"updated_at" => date("Y-m-d")
 		]);
+
+		User::insert([
+			"user_type_id" => 1,
+			"first_name" => "Admin",
+			"last_name" => "Admin",
+			"email" => "kinder.admin@gmail.com",
+			"password" => bcrypt("admin123"),
+			"gender" => 0,
+			"interested_in" => 1,
+			"dob" => "1980-01-01",
+			"height" => "200",
+			"weight" => "100",
+			"nationality" => "Lebanese",
+			"net_worth" => "1",
+			"currency" => "USD",
+			"bio" => "Admin!",
+			"is_highlighted" => 0,
+	   ]);
+
 	   
 		User::insert([
 			"user_type_id" => 2,
