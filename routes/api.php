@@ -22,9 +22,9 @@ Route::get('/highlighted', [UserController::class, 'highlighted'])->name('api:hi
 Route::get('admin/get_msgs', [AdminController::class, 'getNonApprovedMsgs'])->name('api:admin_get_msgs');
 Route::post('admin/approve_msg', [AdminController::class, 'approveMsg'])->name('api:admin_approve_msg');
 Route::post('admin/reject_msg', [AdminController::class, 'rejectMsg'])->name('api:admin_reject_msg');
-Route::get('admin/images', [AdminController::class, 'getNonApprovedImages'])->name('api:get_images');
-Route::post('admin/approve_image', [AdminController::class, 'approveImage'])->name('api:admin_approve_image');
-Route::post('admin/reject_image', [AdminController::class, 'rejectImage'])->name('api:admin_reject_image');
+Route::get('admin/get_imgs', [AdminController::class, 'getNonApprovedImages'])->name('api:get_images');
+Route::post('admin/approve_img', [AdminController::class, 'approveImage'])->name('api:admin_approve_image');
+Route::post('admin/reject_img', [AdminController::class, 'rejectImage'])->name('api:admin_reject_image');
 
 Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('getUsers', [UserController::class, 'getUsers'])->name('api:getUsers');
