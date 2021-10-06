@@ -58,23 +58,23 @@ class UserController extends Controller{
 	// edit profile. profile picture not included yet
 	public function edit_profile(Request $request) {
 
-		$validator = Validator::make($request->all(), [
-            'first_name' => 'required|string|between:2,100',
-            'last_name' => 'required|string|between:2,100',
-			'gender' => 'required|integer',
-			'interested_in' => 'required|integer',
-			'dob' => 'required',
-			'net_worth' => 'required|integer',
-			'currency' => 'required|string',
-			'bio' => 'required|string|between:2,200'
-        ]);
+		// $validator = Validator::make($request->all(), [
+        //     'first_name' => 'required|string|between:2,100',
+        //     'last_name' => 'required|string|between:2,100',
+		// 	'gender' => 'required|integer',
+		// 	'interested_in' => 'required|integer',
+		// 	'dob' => 'required',
+		// 	'net_worth' => 'required|integer',
+		// 	'currency' => 'required|string',
+		// 	'bio' => 'required|string|between:2,200'
+        // ]);
 
-        if ($validator->fails()) {
-            return response()->json(array(
-                "status" => false,
-                "errors" => $validator->errors()
-            ), 400);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json(array(
+        //         "status" => false,
+        //         "errors" => $validator->errors()
+        //     ), 400);
+        // }
 		
 		$user = JWTAuth::user();
 		$id = $user->id;
@@ -334,6 +334,13 @@ class UserController extends Controller{
 					
 		return json_encode($user_data);
 
+	}
+
+	function getUserProfileImage(){
+		$user = Auth::user()->id;
+		$profile_image = UserPicture::select('*')->where('is_approved', 1)->where('user_id', $user)->latest('created_at')->first();
+		
+		return json_encode($profile_image);
 	}
 }
 

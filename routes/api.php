@@ -26,7 +26,8 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('getHobbies', [UserController::class, 'getHobbies'])->name('api:getHobbies');
     Route::get('getUserHobbies', [UserController::class, 'getUserHobbies'])->name('api:getUserHobbies');
     Route::post('edit_profile', [UserController::class, 'edit_profile'])->name('api:edit_profile');
-    Route::post('get_user_profile', [UserController::class, 'getUserProfile'])->name('api:get_user_profile');
+    Route::get('get_user_profile_image', [UserController::class, 'getUserProfileImage'])->name('api:get_user_profile_image');
+    Route::get('get_user_profile', [UserController::class, 'getUserProfile'])->name('api:get_user_profile');
     Route::get('/search/{keyword}', [UserController::class, 'search'])->name('api:search');
     Route::post('/upload_image', [UserController::class, 'uploadImage'])->name('api:upload_image');
     Route::post('add_to_favorites', [UserController::class, 'addToFavorites'])->name('api:add_to_favorites');
