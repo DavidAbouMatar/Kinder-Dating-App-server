@@ -20,6 +20,7 @@ Route::post('register', [AuthController::class, 'register'])->name('api:register
 Route::post('login', [AuthController::class, 'login'])->name('api:login');
 Route::post('admin/login', [AdminController::class, 'login'])->name('api:admin_login');
 Route::get('/highlighted', [UserController::class, 'highlighted'])->name('api:highlighted');
+Route::get('/admin/auto_review_msgs', [AdminController::class, 'autoMsgReview'])->name('api:admin_auto_review_msgs');
 
 Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('getUsers', [UserController::class, 'getUsers'])->name('api:getUsers');

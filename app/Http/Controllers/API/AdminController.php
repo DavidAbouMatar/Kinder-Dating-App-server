@@ -97,9 +97,9 @@ class AdminController extends Controller
         $user_type = $user->user_type_id;
 
         if ($user_type == 1) {
-            $images = UserMessage::where('is_approved','0')->get()->toArray();
+            $msgs = UserMessage::where('is_approved','0')->get()->toArray();
         
-            return json_encode($images);
+            return json_encode($msgs);
         }else {
 			return response()->json(["error" => "You are Unauthorized"], 401);
         }
@@ -155,5 +155,20 @@ class AdminController extends Controller
         }else {
 			return response()->json(["error" => "You are Unauthorized"], 401);
         }
+    }
+
+    public function autoMsgReview(){
+        $banned_words = ["fuck", "shit", "ass", "butt", "dick", "penis", "pussy", "breasts", "asshole", "bitch", 'bastard', 'cunt', 'cum', 'bollocks', 'bugger', 'blood', 'kill', 'choad', 'crikey', 'rubbish', 'shag', 'wank', 'wanker', 'sperm', 'piss', 'twat', 'oath'];
+        //Checking is any of the un-approved msgs contain any of the banned words!
+        // for ($i=0; $i <count($unapproved_msgs) ; $i++) { 
+        //     for ($j=0; $j < count($banned_words); $j++) { 
+        //         # code...
+        //     }
+        // }
+        // Approval if Message body does not contain any of the banned words
+        UserMessage::where('is_approved', '=', 0)
+        ->update(['is_approved' => '1']);
+    
+        return json_encode("Auto Message Reviewer is Running!");
     }
 }
