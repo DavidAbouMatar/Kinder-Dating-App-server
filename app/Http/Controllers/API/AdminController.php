@@ -6,11 +6,43 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+use App\Models\User;
 use App\Models\UserPicture;
 use App\Models\UserMessage;
 
+use Auth;
+use JWTAuth;
+
 class AdminController extends Controller
 {
+    function login(Request $request){
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|string|min:6',
+        ]);
+
+		if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+		try{
+			if(!$token = JWTAuth::attempt($validator->validated())){
+				return response()->json(["error" => "Invalid Credentials"], 401);
+			}
+		}catch(JWTException $e){
+			return json_encode(["error" => "Error occured"]);
+		}
+		
+		$user = Auth::user();
+        $user_type = $user->user_type_id;
+        if ($user_type == 1) {
+            $user->token = $token;
+            return json_encode($user);
+        }else {
+			return response()->json(["error" => "Invalid Credentials"], 401);
+        }
+	}
+
     function getNonApprovedImages(){
         $images = UserPicture::where('is_approved','0')->get()->toArray();
         
