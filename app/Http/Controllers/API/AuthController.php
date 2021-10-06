@@ -26,13 +26,16 @@ class AuthController extends Controller{
 
 		try{
 			if(!$token = JWTAuth::attempt($validator->validated())){
-				return response()->json(["error" => "Invalid Credentials"], 401);
-			}
+				return response()->json(array(
+					"status" => 'ok',
+					"errors" => 'Invalid Credentials!'
+				), 401);
+				}
 		}catch(JWTException $e){
 			return json_encode(["error" => "Error occured"]);
 		}
 		
-		$user = Auth::user();
+		$user = JWTAuth::user();
 		$user->token = $token;
 		return json_encode($user);
 	}
@@ -57,7 +60,7 @@ class AuthController extends Controller{
 
         if ($validator->fails()) {
             return response()->json(array(
-                "status" => false,
+                "status" => 'false',
                 "errors" => $validator->errors()
             ), 400);
         }
