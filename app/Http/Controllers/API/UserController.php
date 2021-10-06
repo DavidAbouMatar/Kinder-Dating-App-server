@@ -5,6 +5,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Nette\Utils\Image;
+use File;
+// use League\CommonMark\Extension\CommonMark\Node\Inline\Image
+
 
 use App\Models\User;
 use App\Models\UserConnection;
@@ -17,7 +23,7 @@ use App\Models\UserBlocked;
 
 use Auth;
 use JWTAuth;
-use Storage;
+// use Storage;
 
 
 class UserController extends Controller{
@@ -128,7 +134,7 @@ class UserController extends Controller{
 			$Hobby->name = $hobby;
 			$Hobby->save();
 		}
-
+		
 		return response()->json([
             'status' => true,
             'message' => 'Hobbies added successfully.',
@@ -149,42 +155,32 @@ class UserController extends Controller{
 		return json_encode($search);
 	}
 
-	//save image to storage/app/public/uploads
 	// run php artisan storage:link when testing
 	public function uploadImage(Request $request){
-		$user = Auth::user();
-		$id = $user->id;
+		$user = Auth::user()->id;
 
-		$validator = Validator::make($request->all(), [
-			'image' => 'required|image:jpeg,png,jpg,gif,svg'
-		]);
-
-		if ($validator->fails()) {
-			return response()->json(array(
-				"status" => false,
-				"errors" => $validator->errors()
-			), 400);
-		}
-		
 		$fileModel = new UserPicture();
+		// base64 encoded image
+		$image = $request -> image_string;  
+		//name image
+    	$imageName = Str::random(12).'.'.'jpg';
+		// decode and store image public/storage
+		Storage::disk('public')->put($imageName, base64_decode($image));
+		$fileModel->user_id =$user;
+		$fileModel->is_approved ='0';
+		$fileModel->is_profile_picture ='1';
+		$fileModel->picture_url = 'http://127.0.0.1:8000' . '/storage/' . $imageName;
+		$fileModel->save();
 
-		if($request->file()) {
-			$fileName = $request->image->getClientOriginalName();
-			$filePath = $request->file('image')->storeAs('uploads', $fileName, 'public');
-			$fileModel->user_id =$id;
-			$fileModel->is_approved ='0';
-			$fileModel->is_profile_picture ='1';
-			$fileModel->picture_url = $request->image->getClientOriginalName();
-			$fileModel->picture_url = 'http://127.0.0.1:8000' . '/storage/' . $filePath;
-			$fileModel->save();
-			
-			return response()->json([
-				'status' => true,
-				'message' => 'User profile successfully updated',
-			], 201);
+		return response()->json(array(
+			"status" => true,
+			"sucess" => "sucess"
+		), 200);
 
 		}
-	}
+	
+
+
 
 	// add user to favorites, and decide whether there is a match or not
 	public function addToFavorites(Request $request)
@@ -328,6 +324,18 @@ class UserController extends Controller{
             'status' => true,
             'message' => 'User successfully blocked!',
         ], 201);
+	}
+
+	function getUserProfile(){
+		$user = Auth::user()->id;
+		$user_data = User::select('*')
+						 ->where('id', $user)   
+					     ->get();
+
+
+					
+		return json_encode($user_data);
+
 	}
 }
 

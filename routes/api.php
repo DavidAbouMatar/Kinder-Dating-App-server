@@ -38,4 +38,5 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::post('send_msg', [UserController::class, 'sendMsg'])->name('api:send_msg');
     Route::get('get_msgs', [UserController::class, 'getMsgs'])->name('api:get_msgs');
     Route::post('block_user', [UserController::class, 'blockUser'])->name('api:block_user');
+    Route::get('get_user_profile', [UserController::class, 'getUserProfile'])->name('api:get_user_profile');
 });
