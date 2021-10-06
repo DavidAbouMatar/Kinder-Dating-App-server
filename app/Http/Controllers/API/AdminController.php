@@ -33,7 +33,7 @@ class AdminController extends Controller
 			return json_encode(["error" => "Error occured"]);
 		}
 		
-		$user = Auth::user();
+		$user = JWTAuth::user();
         $user_type = $user->user_type_id;
         if ($user_type == 1) {
             $user->token = $token;
@@ -44,74 +44,116 @@ class AdminController extends Controller
 	}
 
     function getNonApprovedImages(){
-        $images = UserPicture::where('is_approved','0')->get()->toArray();
-        
-        return json_encode($images);
+        $user = JWTAuth::user();
+        $user_type = $user->user_type_id;
 
+        if ($user_type == 1) {
+            $images = UserPicture::where('is_approved','0')->get()->toArray();
+            return json_encode($images);
+        }else {
+			return response()->json(["error" => "You are Unauthorized"], 401);
+        }
     }
 
     function approveImage(Request $request){
-        $approved_img_id = $request->approved_img_id;
-        $img = UserPicture::find($approved_img_id);
-        $img->is_approved = 1;
-        $img->save();
+        $user = JWTAuth::user();
+        $user_type = $user->user_type_id;
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Image Approved!',
-        ], 200);
+        if ($user_type == 1) {
+            $approved_img_id = $request->approved_img_id;
+            $img = UserPicture::find($approved_img_id);
+            $img->is_approved = 1;
+            $img->save();
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'Image Approved!',
+            ], 200);
+        }else {
+			return response()->json(["error" => "You are Unauthorized"], 401);
+        }
     }
 
     function rejectImage(Request $request){
-        $rejected_img_id = $request->rejected_img_id;
-        $img = UserPicture::find($rejected_img_id);
-        $img->delete();
+        $user = JWTAuth::user();
+        $user_type = $user->user_type_id;
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Image Rejected!',
-        ], 200);
+        if ($user_type == 1) {
+            $rejected_img_id = $request->rejected_img_id;
+            $img = UserPicture::find($rejected_img_id);
+            $img->delete();
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'Image Rejected!',
+            ], 200);
+        }else {
+			return response()->json(["error" => "You are Unauthorized"], 401);
+        }
     }
-
 
     function getNonApprovedMsgs(){
-        $images = UserMessage::where('is_approved','0')->get()->toArray();
+        $user = JWTAuth::user();
+        $user_type = $user->user_type_id;
+
+        if ($user_type == 1) {
+            $images = UserMessage::where('is_approved','0')->get()->toArray();
         
-        return json_encode($images);
-
+            return json_encode($images);
+        }else {
+			return response()->json(["error" => "You are Unauthorized"], 401);
+        }
     }
 
-    public function approveMsg(Request $request)
-    {
-        $approved_msg_id = $request->approved_msg_id;
-        $msg = UserMessage::find($approved_msg_id);
-        $msg->is_approved = 1;
-        $msg->save();
+    public function approveMsg(Request $request){
+        $user = JWTAuth::user();
+        $user_type = $user->user_type_id;
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Message Approved!',
-        ], 200);
+        if ($user_type == 1) {
+            $approved_msg_id = $request->approved_msg_id;
+            $msg = UserMessage::find($approved_msg_id);
+            $msg->is_approved = 1;
+            $msg->save();
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'Message Approved!',
+            ], 200);
+        }else {
+			return response()->json(["error" => "You are Unauthorized"], 401);
+        }
     }
 
-    public function rejectMsg(Request $request)
-    {
-        $rejected_msg_id = $request->rejected_msg_id;
-        $msg = UserMessage::find($rejected_msg_id);
-        $msg->delete();
+    public function rejectMsg(Request $request){
+        $user = JWTAuth::user();
+        $user_type = $user->user_type_id;
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Message Rejected!',
-        ], 200);
+        if ($user_type == 1) {
+            $rejected_msg_id = $request->rejected_msg_id;
+            $msg = UserMessage::find($rejected_msg_id);
+            $msg->delete();
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'Message Rejected!',
+            ], 200);
+        }else {
+			return response()->json(["error" => "You are Unauthorized"], 401);
+        }
     }
 
-    public function getPendingCount()
-    {
-        $pending_imgs_count = UserPicture::where('is_approved', 0)->get()->count();
-        $pending_msgs_count = UserMessage::where('is_approved', 0)->get()->count();
-        $pending_count = ["imgs_count"  =>  $pending_imgs_count, "msgs_count"  =>  $pending_msgs_count];
-
-        return json_encode($pending_count);
+    public function getPendingCount(){
+        $user = JWTAuth::user();
+        $user_type = $user->user_type_id;
+        
+        if ($user_type == 1) {
+            $pending_imgs_count = UserPicture::where('is_approved', 0)->get()->count();
+            $pending_msgs_count = UserMessage::where('is_approved', 0)->get()->count();
+            $pending_count = ["imgs_count"  =>  $pending_imgs_count, "msgs_count"  =>  $pending_msgs_count];
+    
+            return json_encode($pending_count);
+        }else {
+			return response()->json(["error" => "You are Unauthorized"], 401);
+        }
     }
 }
