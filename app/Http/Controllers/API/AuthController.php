@@ -32,7 +32,7 @@ class AuthController extends Controller{
 			return json_encode(["error" => "Error occured"]);
 		}
 		
-		$user = Auth::user();
+		$user = JWTAuth::user();
 		$user->token = $token;
 		return json_encode($user);
 	}
