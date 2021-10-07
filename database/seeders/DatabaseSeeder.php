@@ -188,5 +188,15 @@ class DatabaseSeeder extends Seeder
 			"updated_at" => date("Y-m-d")
 		]);
 		
+		UserMessage::insert([
+			"sender_id" => "3",
+			"receiver_id" => "2",
+			"body" => "Heloooo!",
+			"is_approved" => "0",
+			"is_read" => "0",
+			"created_at" => date("Y-m-d"),
+			"updated_at" => date("Y-m-d")
+		]);
+
     }
 }
