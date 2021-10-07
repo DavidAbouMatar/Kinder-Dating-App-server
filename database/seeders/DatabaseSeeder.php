@@ -8,6 +8,7 @@ use DB;
 use App\Models\UserType;
 use App\Models\User;
 use App\Models\UserHobby;
+use App\Models\UserMessage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -126,5 +127,66 @@ class DatabaseSeeder extends Seeder
 			"created_at" => date("Y-m-d"),
 			"updated_at" => date("Y-m-d")
 	   ]);
+
+	   UserMessage::insert([
+		"sender_id" => "3",
+		"receiver_id" => "2",
+		"body" => "Hello, how are you today??",
+		"is_approved" => "0",
+		"is_read" => "0",
+		"created_at" => date("Y-m-d"),
+		"updated_at" => date("Y-m-d")
+		]);
+
+	UserMessage::insert([
+		"sender_id" => "3",
+		"receiver_id" => "2",
+		"body" => "Hi, **** *** *** ***!!!",
+		"is_approved" => "0",
+		"is_read" => "0",
+		"created_at" => date("Y-m-d"),
+		"updated_at" => date("Y-m-d")
+		]);
+
+		UserMessage::insert([
+			"sender_id" => "2",
+			"receiver_id" => "3",
+			"body" => "Nice to meet you :)",
+			"is_approved" => "0",
+			"is_read" => "0",
+			"created_at" => date("Y-m-d"),
+			"updated_at" => date("Y-m-d")
+		]);
+
+		UserMessage::insert([
+			"sender_id" => "3",
+			"receiver_id" => "2",
+			"body" => "yes of course",
+			"is_approved" => "0",
+			"is_read" => "0",
+			"created_at" => date("Y-m-d"),
+			"updated_at" => date("Y-m-d")
+		]);
+		
+		UserMessage::insert([
+			"sender_id" => "3",
+			"receiver_id" => "2",
+			"body" => "How was last night ;)",
+			"is_approved" => "0",
+			"is_read" => "0",
+			"created_at" => date("Y-m-d"),
+			"updated_at" => date("Y-m-d")
+		]);
+		
+		UserMessage::insert([
+			"sender_id" => "3",
+			"receiver_id" => "2",
+			"body" => "sure, today at 9",
+			"is_approved" => "0",
+			"is_read" => "0",
+			"created_at" => date("Y-m-d"),
+			"updated_at" => date("Y-m-d")
+		]);
+		
     }
 }
