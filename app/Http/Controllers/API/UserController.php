@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 
@@ -48,9 +49,10 @@ class UserController extends Controller{
 					     ->get();
 		$interested_in = $user_data[0]['interested_in'];
 
-		$users = User::select('first_name', 'last_name', 'dob', 'net_worth')
-					 ->where('gender', $interested_in)
-					 ->get();
+		$users = DB::select('SELECT U.first_name, U.last_name, U.dob, U.net_worth, UP.picture_url FROM users U, user_pictures AS UP where U.id = UP.user_id AND U.gender = 1 AND UP.is_profile_picture = 1');
+		// $users = User::select('first_name', 'last_name', 'dob', 'net_worth')
+		// 			 ->where('gender', $interested_in)
+		// 			 ->get();
 					
 		return json_encode($users);
 	}
