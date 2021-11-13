@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-
-
 use App\Models\User;
 use App\Models\UserConnection;
 use App\Models\UserFavorite;
@@ -22,7 +20,6 @@ use App\Models\UserBlocked;
 
 use Auth;
 use JWTAuth;
-// use Storage;
 
 
 class UserController extends Controller{
@@ -34,7 +31,7 @@ class UserController extends Controller{
 		return json_encode(JWTAuth::user());
 	}
 
-	// get only highlighted users to home page (no authintication needed)
+	// get only highlighted users to home page (no authentication needed)
 	public function highlighted(){
 		$highlighted_users = User::where("is_highlighted", 1)->limit(6)->get()->toArray();
 		return json_encode($highlighted_users);
@@ -50,36 +47,15 @@ class UserController extends Controller{
 		$interested_in = $user_data[0]['interested_in'];
 
 		$users = DB::select('SELECT U.first_name, U.last_name, U.dob, U.net_worth, UP.picture_url FROM users U, user_pictures AS UP where U.id = UP.user_id AND U.gender = 1 AND UP.is_profile_picture = 1');
-		// $users = User::select('first_name', 'last_name', 'dob', 'net_worth')
-		// 			 ->where('gender', $interested_in)
-		// 			 ->get();
 					
 		return json_encode($users);
 	}
 
 	// edit profile. profile picture not included yet
 	public function edit_profile(Request $request) {
-
-		// $validator = Validator::make($request->all(), [
-        //     'first_name' => 'required|string|between:2,100',
-        //     'last_name' => 'required|string|between:2,100',
-		// 	'gender' => 'required|integer',
-		// 	'interested_in' => 'required|integer',
-		// 	'dob' => 'required',
-		// 	'net_worth' => 'required|integer',
-		// 	'currency' => 'required|string',
-		// 	'bio' => 'required|string|between:2,200'
-        // ]);
-
-        // if ($validator->fails()) {
-        //     return response()->json(array(
-        //         "status" => false,
-        //         "errors" => $validator->errors()
-        //     ), 400);
-        // }
-		
 		$user = JWTAuth::user();
 		$id = $user->id;
+
 		$user::where('id', $id)
 		 	 ->update([
 				"first_name" => $request -> first_name,
